@@ -1,0 +1,250 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Helena",
+  "scopeName": "source.helena",
+  "patterns": [
+    {
+      "begin": "^",
+      "end": "(;)|$",
+      "name": "meta.statement.sentence.helena",
+      "endCaptures": {
+        "1": { "name": "punctuation.terminator.statement.semicolon.helena" }
+      },
+      "patterns": [{ "include": "#sentence" }]
+    }
+  ],
+  "repository": {
+    "sentence": {
+      "patterns": [
+        { "match": "[ \t\r\f]", "name": "punctuation.separator.word.helena" },
+        { "include": "#block_comment_3" },
+        { "include": "#block_comment_2" },
+        { "include": "#block_comment" },
+        { "include": "#comment" },
+        { "include": "#here_string" },
+        { "include": "#tagged_string" },
+        { "include": "#string" },
+        { "include": "#literal" },
+        { "include": "#continuation" },
+        { "include": "#escape" },
+        { "include": "#block" },
+        { "include": "#expression" },
+        { "include": "#tuple" },
+        { "include": "#substitute_variable" },
+        { "include": "#substitute_block" },
+        { "include": "#substitute_expression" },
+        { "include": "#substitute_tuple" }
+      ]
+    },
+    "block_comment_3": {
+      "name": "comment.block.helena",
+      "begin": "(?<![^ \t\r\f;])(###){",
+      "end": "}\\1(?!#)",
+      "beginCaptures": {
+        "0": { "name": "comment.block.begin.helena" }
+      },
+      "endCaptures": {
+        "0": { "name": "comment.block.end.helena" }
+      },
+      "patterns": [
+        {
+          "include": "#block_comment_3"
+        }
+      ]
+    },
+    "block_comment_2": {
+      "name": "comment.block.helena",
+      "begin": "(?<![^ \t\r\f;])(##){",
+      "end": "}\\1(?!#)",
+      "beginCaptures": {
+        "0": { "name": "comment.block.begin.helena" }
+      },
+      "endCaptures": {
+        "0": { "name": "comment.block.end.helena" }
+      },
+      "patterns": [
+        {
+          "include": "#block_comment_2"
+        }
+      ]
+    },
+    "block_comment": {
+      "name": "comment.block.helena",
+      "begin": "(?<![^ \t\r\f;])(#){",
+      "end": "}\\1(?!#)",
+      "beginCaptures": {
+        "0": { "name": "comment.block.begin.helena" }
+      },
+      "endCaptures": {
+        "0": { "name": "comment.block.end.helena" },
+        "1": { "name": "invalid.illegal" }
+      },
+      "patterns": [
+        {
+          "include": "#block_comment"
+        }
+      ]
+    },
+    "comment": {
+      "name": "comment.line.helena",
+      "begin": "(?<![^ \t\r\f;])#",
+      "end": "$",
+      "beginCaptures": {
+        "0": { "name": "comment.line.begin.helena" }
+      },
+      "patterns": [{ "include": "#continuation" }, { "include": "#escape" }]
+    },
+    "here_string": {
+      "contentName": "string.quoted.triple.helena",
+      "begin": "(?<![^ \t\r\f;])(\"{3,})",
+      "end": "\\1(?!\")",
+      "beginCaptures": {
+        "0": { "name": "string.begin.helena" }
+      },
+      "endCaptures": {
+        "0": { "name": "string.end.helena" }
+      }
+    },
+    "tagged_string": {
+      "contentName": "string.quoted.tagged.helena",
+      "begin": "(?<![^ \t\r\f;])(\"\")(\\w+)(.*)$",
+      "end": "^(.*)(\\2)(\\1)(?!\")",
+      "beginCaptures": {
+        "0": { "name": "string.begin.helena" },
+        "2": { "name": "string.quoted.tagged.tag.helena" },
+        "3": { "name": "comment.line.helena" }
+      },
+      "endCaptures": {
+        "0": { "name": "string.end.helena" },
+        "1": { "name": "comment.helena" },
+        "2": { "name": "string.quoted.tagged.tag.helena" }
+      }
+    },
+    "string": {
+      "contentName": "string.interpolated.helena",
+      "begin": "(?<![^ \t\r\f;])\"",
+      "end": "\"",
+      "beginCaptures": {
+        "0": { "name": "string.begin.helena" }
+      },
+      "endCaptures": {
+        "0": { "name": "string.end.helena" }
+      },
+      "patterns": [
+        {
+          "name": "expression.helena",
+          "contentName": "meta.embedded.script.helena",
+          "begin": "\\[",
+          "end": "\\]",
+          "patterns": [{ "include": "source.helena" }]
+        },
+        { "include": "#substitute_variable" },
+        { "include": "#substitute_block" },
+        { "include": "#substitute_expression" },
+        { "include": "#continuation" },
+        { "include": "#escape" }
+      ]
+    },
+    "block": {
+      "name": "block.helena",
+      "begin": "\\{",
+      "end": "\\}",
+      "patterns": [{ "include": "source.helena" }]
+    },
+    "expression": {
+      "name": "expression.helena",
+      "begin": "\\[",
+      "end": "\\]",
+      "patterns": [{ "include": "source.helena" }]
+    },
+    "tuple": {
+      "name": "tuple.helena",
+      "begin": "\\(",
+      "end": "\\)",
+      "patterns": [{ "include": "source.helena" }]
+    },
+    "substitute_variable": {
+      "name": "variable.substituted.helena",
+      "match": "(\\$[*$]*)([^ \t\r\f\n\"#\\$\\(\\)\\*;\\[\\\\\\]\\{\\}]+)",
+      "captures": {
+        "1": { "name": "punctuation.definition.template-expression.begin" },
+        "2": { "name": "variable.name" }
+      }
+    },
+    "substitute_block": {
+      "name": "block.substituted.helena",
+      "contentName": "variable.name",
+      "begin": "(\\$[*$]*)\\{",
+      "end": "\\}",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.template-expression.begin" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.template-expression.end" }
+      },
+      "patterns": [{ "include": "source.helena" }]
+    },
+    "substitute_expression": {
+      "name": "expression.substituted.helena",
+      "begin": "(\\$[*$]*)\\[",
+      "end": "\\]",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.template-expression.begin" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.template-expression.end" }
+      },
+      "patterns": [{ "include": "source.helena" }]
+    },
+    "substitute_tuple": {
+      "name": "tuple.substituted.helena",
+      "contentName": "variable.name",
+      "begin": "(\\$[*$]*)\\(",
+      "end": "\\)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.template-expression.begin" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.template-expression.end" }
+      },
+      "patterns": [{ "include": "source.helena" }]
+    },
+    "literal": {
+      "name": "literal.helena",
+      "match": "[^ \t\r\f\n\"#\\$\\(\\)\\*;\\[\\\\\\]\\{\\}]+"
+    },
+    "continuation": {
+      "name": "continuation.helena",
+      "begin": "\\\\\n",
+      "end": "^[ \t\r\f]*"
+    },
+    "escape": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.helena",
+          "match": "\\\\[abfnrtv]"
+        },
+        {
+          "name": "constant.character.escape.helena",
+          "match": "\\\\[0-7]{1,3}"
+        },
+        {
+          "name": "constant.character.escape.helena",
+          "match": "\\\\x[0-9a-fA-F]{1,2}"
+        },
+        {
+          "name": "constant.character.escape.helena",
+          "match": "\\\\u[0-9a-fA-F]{1,4}"
+        },
+        {
+          "name": "constant.character.escape.helena",
+          "match": "\\\\U[0-9a-fA-F]{1,8}"
+        },
+        {
+          "captures": { "1": { "name": "constant.character.escape.helena" } },
+          "match": "(\\\\)."
+        }
+      ]
+    }
+  }
+}

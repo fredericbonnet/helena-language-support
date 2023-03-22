@@ -1,0 +1,53 @@
+{
+  "name": "helena-language-support",
+  "displayName": "Helena Language",
+  "description": "Helena language support for Visual Studio Code",
+  "author": "Frédéric Bonnet <fredericbonnet@free.fr>",
+  "publisher": "fredericbonnet",
+  "version": "0.0.1",
+  "license": "BSD-3-Clause",
+  "homepage": "https://github.com/fredericbonnet/helena-language-support",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fredericbonnet/helena-language-support.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fredericbonnet/helena-language-support/issues"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "engines": {
+    "vscode": "^1.76.0"
+  },
+  "scripts": {
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "helena",
+        "aliases": [
+          "Helena",
+          "helena"
+        ],
+        "extensions": [
+          ".lna",
+          ".helena"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "helena",
+        "scopeName": "source.helena",
+        "path": "./syntaxes/helena.tmLanguage.json"
+      }
+    ]
+  },
+  "devDependencies": {
+    "vsce": "^2.15.0"
+  }
+}
